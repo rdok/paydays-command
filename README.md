@@ -1,6 +1,6 @@
 ## Paydays
 Output pay dates for any given year. Options include different language, and 
-output format.
+output mediums (standard & file).
 
 ### Installation
 ```bash
