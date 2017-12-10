@@ -25,8 +25,9 @@ class CalculatePaydays
 
             $byYearAndMonth = new ByYearAndMonth($this->year, $month);
 
-            $paymentMonths[] = $transformer
-                ->transform($byYearAndMonth->handle());
+            $rawPaymentDays = $byYearAndMonth->handle();
+
+            $paymentMonths[] = $transformer->transform($rawPaymentDays);
         }
 
         return $paymentMonths;

@@ -8,6 +8,7 @@ namespace App\Paydays;
 
 use Carbon\Carbon;
 
+/** Calculate paydays for a specific month & year. */
 class ByYearAndMonth
 {
     private $year;
