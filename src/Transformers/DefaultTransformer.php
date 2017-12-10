@@ -31,7 +31,7 @@ class DefaultTransformer extends Transformer
         $salary = $paydaysForAMonthForAMonth[2];
 
         return [
-            $firstExpenses->format('F'),
+            ucfirst(translate($this->language, $firstExpenses->format('F'))),
             $firstExpenses->format(self::DATE_TIME_FORMAT),
             $secondExpenses->format(self::DATE_TIME_FORMAT),
             $salary->format(self::DATE_TIME_FORMAT),

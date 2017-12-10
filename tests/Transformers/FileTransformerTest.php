@@ -54,7 +54,7 @@ class FileTransformerTest extends TestCase
             $salaryDay = Carbon::now()->subDay()
         ]]);
 
-        $expectedPaymentDays = '"Month Name","1st expenses day",“2nd expenses day”,"Salary day"';
+        $expectedPaymentDays = '"Month Name","1st expenses day","2nd expenses day","Salary day"';
         $expectedPaymentDays .= "\n";
 
         $expectedPaymentDays .= sprintf(

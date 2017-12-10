@@ -12,7 +12,14 @@ class FileTransformer extends Transformer
 {
     public function transformMonths(array $paymentDayMonths)
     {
-        $output = '"Month Name","1st expenses day",“2nd expenses day”,"Salary day"';
+        $output = sprintf(
+            '"%s","%s","%s","%s"',
+            translate($this->language, "Month name"),
+            translate($this->language, "1st expenses day"),
+            translate($this->language, "2nd expenses day"),
+            translate($this->language, "Salary day")
+        );
+
         $output .= "\n";
 
         foreach ($paymentDayMonths as $paymentDayMonth) {
@@ -33,7 +40,7 @@ class FileTransformer extends Transformer
 
         return sprintf(
             '"%s","%s","%s","%s"%s',
-            $firstExpenses->format('F'),
+            ucfirst(translate($this->language, $firstExpenses->format('F'))),
             $firstExpenses->format(self::DATE_TIME_FORMAT),
             $secondExpenses->format(self::DATE_TIME_FORMAT),
             $salary->format(self::DATE_TIME_FORMAT),

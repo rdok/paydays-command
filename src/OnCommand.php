@@ -45,36 +45,58 @@ class OnCommand extends SymfonyCommand
     {
         $year = $input->getArgument('year');
         $outputOption = $input->getOption('output');
+        $languageOption = $input->getOption('lang');
 
         $calculatePaydays = new CalculatePaydays($year);
 
 
         if (empty($outputOption) || $outputOption == 'standard') {
 
-            $paydays = $calculatePaydays->handle(new DefaultTransformer);
-
-            return $this->renderTable($paydays, $output);
+            return $this->handleTableOutput(
+                $calculatePaydays, $output, $languageOption
+            );
         }
 
-        $paydays = $calculatePaydays->handle(new FileTransformer);
+        return $this->handleFileOutput(
+            $year, $calculatePaydays, $output, $languageOption
+        );
+
+    }
+
+    private function handleTableOutput(
+        CalculatePaydays $calculatePaydays,
+        OutputInterface $output,
+        $languageOption)
+    {
+        $transformer = new DefaultTransformer($languageOption);
+
+        $paydays = $calculatePaydays->handle($transformer);
+
+        $table = new Table($output);
+
+        $table->setHeaders([
+            translate($languageOption, 'Month Name'),
+            translate($languageOption, '1st expenses day'),
+            translate($languageOption, '2nd expenses day'),
+            translate($languageOption, 'Salary day'),
+        ])->setRows($paydays)
+            ->render();
+    }
+
+    private function handleFileOutput(
+        $year,
+        CalculatePaydays $calculatePaydays,
+        OutputInterface $output,
+        $languageOption)
+    {
+        $transformer1 = new FileTransformer($languageOption);
+
+        $paydays = $calculatePaydays->handle($transformer1);
 
         $filename = 'paydays_' . $year . '.csv';
 
         file_put_contents($filename, $paydays);
 
         $output->writeln("<info>Paydays saved to {$filename}</info>");
-    }
-
-    private function renderTable($paydays, OutputInterface $output)
-    {
-        $table = new Table($output);
-
-        $table->setHeaders([
-            'Month Name',
-            '1st expenses day',
-            '2nd expenses day',
-            'Salary day'
-        ])->setRows($paydays)
-            ->render();
     }
 }
