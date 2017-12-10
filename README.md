@@ -2,6 +2,12 @@
 Output pay dates for any given year. Options include different language, and 
 output format.
 
+### Installation
+```bash
+git clone git@github.com:rdok/paydays-command.git && cd paydays-command && composer install
+./paydays
+```
+
 ### Uses
 #### File
 

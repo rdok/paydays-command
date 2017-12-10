@@ -89,9 +89,9 @@ class OnCommand extends SymfonyCommand
         OutputInterface $output,
         $languageOption)
     {
-        $transformer1 = new FileTransformer($languageOption);
+        $transformer = new FileTransformer($languageOption);
 
-        $paydays = $calculatePaydays->handle($transformer1);
+        $paydays = $calculatePaydays->handle($transformer);
 
         $filename = 'paydays_' . $year . '.csv';
 
