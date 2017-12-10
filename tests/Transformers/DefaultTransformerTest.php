@@ -4,10 +4,11 @@
  * @since 12/10/17
  */
 
-namespace Tests;
+namespace Tests\Transformers;
 
-use App\Paydays\DefaultTransformer;
+use App\Transformers\DefaultTransformer;
 use Carbon\Carbon;
+use Tests\TestCase;
 
 class DefaultTransformerTest extends TestCase
 {
@@ -30,6 +31,27 @@ class DefaultTransformerTest extends TestCase
             $secondExpensesDay->format(self::DATETIME_FORMAT),
             $salaryDay->format(self::DATETIME_FORMAT),
         ];
+
+        $this->assertEquals($expectedPaymentDays, $actualPaymentDays);
+    }
+
+    /** @test */
+    public function transform_payment_day_months()
+    {
+        $transformer = new DefaultTransformer();
+
+        $actualPaymentDays = $transformer->transformMonths([[
+            $firstExpensesDay = Carbon::now(),
+            $secondExpensesDay = Carbon::now()->addDay(),
+            $salaryDay = Carbon::now()->subDay()
+        ]]);
+
+        $expectedPaymentDays = [[
+            $firstExpensesDay->format('F'),
+            $firstExpensesDay->format(self::DATETIME_FORMAT),
+            $secondExpensesDay->format(self::DATETIME_FORMAT),
+            $salaryDay->format(self::DATETIME_FORMAT),
+        ]];
 
         $this->assertEquals($expectedPaymentDays, $actualPaymentDays);
     }

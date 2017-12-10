@@ -3,8 +3,18 @@ Output pay dates for any given year. Options include different language, and
 output format.
 
 ### Uses
-$ `./paydays on 2017`
+#### File
+
+```bash
+./paydays on 2017 -o file
+  
+Paydays saved to paydays_2017.csv
 ```
+
+#### Standard output
+```bash
+./paydays on 2017
+  
 +------------+------------------+------------------+------------+
 | Month Name | 1st expenses day | 2nd expenses day | Salary day |
 +------------+------------------+------------------+------------+
@@ -22,5 +32,3 @@ $ `./paydays on 2017`
 | December   | 2017-12-01       | 2017-12-15       | 2017-12-29 |
 +------------+------------------+------------------+------------+
 ```
-
-$ `./paydays on 2017 -l fr -f json`

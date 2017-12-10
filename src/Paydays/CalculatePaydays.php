@@ -6,6 +6,8 @@
 
 namespace App\Paydays;
 
+use App\Transformers\Transformer;
+
 class CalculatePaydays
 {
     private $year;
@@ -15,21 +17,17 @@ class CalculatePaydays
         $this->year = $year;
     }
 
-    public function handle()
+    public function handle(Transformer $transformer)
     {
         $paymentMonths = [];
-
-        $transformer = new DefaultTransformer();
 
         for ($month = 1; $month <= 12; $month++) {
 
             $byYearAndMonth = new ByYearAndMonth($this->year, $month);
 
-            $rawPaymentDays = $byYearAndMonth->handle();
-
-            $paymentMonths[] = $transformer->transform($rawPaymentDays);
+            $paymentMonths[] = $byYearAndMonth->handle();
         }
 
-        return $paymentMonths;
+        return $transformer->transformMonths($paymentMonths);
     }
 }

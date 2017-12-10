@@ -7,6 +7,8 @@
 namespace App;
 
 use App\Paydays\CalculatePaydays;
+use App\Transformers\DefaultTransformer;
+use App\Transformers\FileTransformer;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
@@ -32,21 +34,39 @@ class OnCommand extends SymfonyCommand
                 'Change language using language locale, .e.g fr for French.'
             )
             ->addOption(
-                'format',
-                'f',
+                'output',
+                'o',
                 InputOption::VALUE_OPTIONAL,
-                'Ouput format: text or json.'
+                'Ouput: file, standard (default)'
             );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $year = $input->getArgument('year');
+        $outputOption = $input->getOption('output');
 
         $calculatePaydays = new CalculatePaydays($year);
 
-        $paydays = $calculatePaydays->handle();
 
+        if (empty($outputOption) || $outputOption == 'standard') {
+
+            $paydays = $calculatePaydays->handle(new DefaultTransformer);
+
+            return $this->renderTable($paydays, $output);
+        }
+
+        $paydays = $calculatePaydays->handle(new FileTransformer);
+
+        $filename = 'paydays_' . $year . '.csv';
+
+        file_put_contents($filename, $paydays);
+
+        $output->writeln("<info>Paydays saved to {$filename}</info>");
+    }
+
+    private function renderTable($paydays, OutputInterface $output)
+    {
         $table = new Table($output);
 
         $table->setHeaders([
